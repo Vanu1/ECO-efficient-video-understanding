@@ -1,7 +1,9 @@
 """script for predicting labels from live feed"""
 
 import numpy as np
-import caffe
+import caffe2
+from caffe2.python import core, workspace
+from google.colab.patches import cv2_imshow
 import cv2
 import math
 import scipy.io as sio
@@ -12,9 +14,9 @@ batch_size = 16 #number of samples per video
 
 def online_predict(mean_file,model_def_file,model_file,classes_file,num_categories):
     # caffe init
-    gpu_id = 0
-    caffe.set_device(gpu_id)
-    caffe.set_mode_gpu()
+    # gpu_id = 0
+    # caffe.set_device(gpu_id)
+    # caffe.set_mode_gpu()
 
     frame_counter = 0
     index_to_label = {}
@@ -28,8 +30,8 @@ def online_predict(mean_file,model_def_file,model_file,classes_file,num_categori
         index_to_label[int(index)] = label
         
     
-    net = caffe.Net( model_file,model_def_file, caffe.TEST)
-    cap = cv2.VideoCapture(0)
+    net = core.Net(model_def_file)
+    cap = cv2.VideoCapture("cooking.mp4")
     
     
     dims = (256,340,3,batch_size)
@@ -53,7 +55,7 @@ def online_predict(mean_file,model_def_file,model_file,classes_file,num_categori
       ret, frame = cap.read()
 
       cv2.putText(frame,text, (10,80),cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,255) , thickness = 2 )
-      cv2.imshow('Frames',frame)
+      cv2_imshow(frame)
       img = cv2.resize(frame, dims[1::-1])
       
       last_16_frames.append(img)
@@ -111,11 +113,11 @@ def online_predict(mean_file,model_def_file,model_file,classes_file,num_categori
 if __name__ == "__main__":
 
     # model files
-    mean_file = "../rgb_mean.mat"
-    model_def_file = '../Models/ECO_Lite_kinetics.caffemodel'
+    mean_file = "rgb_mean.mat"
+    model_def_file = 'ECO_Lite_kinetics.caffemodel'
     model_file = '/models_ECO_Lite/kinetics/deploy.prototxt'
     #class indices file
-    classes_file = "../class_ind_kinetics.txt"
+    classes_file = "class_ind_kinetics.txt"
     #num_categories
     num_categories = 400
     
