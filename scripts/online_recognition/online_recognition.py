@@ -55,7 +55,7 @@ def online_predict(mean_file,model_def_file,model_file,classes_file,num_categori
       ret, frame = cap.read()
 
       cv2.putText(frame,text, (10,80),cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,255) , thickness = 2 )
-      cv2_imshow(frame)
+      cv2.imshow("Frame",frame)
       img = cv2.resize(frame, dims[1::-1])
       
       last_16_frames.append(img)
