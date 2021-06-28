@@ -3,7 +3,7 @@
 import numpy as np
 import caffe2
 from caffe2.python import core, workspace
-from google.colab.patches import cv2_imshow
+
 import cv2
 import math
 import scipy.io as sio
